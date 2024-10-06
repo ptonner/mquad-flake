@@ -53,7 +53,7 @@
           buildInputs
         ];
         version = "0.1";
-        pname = "bevy-flake";
+        pname = "mquad-flake";
       in
       {
         packages.default = rustPlatform.buildRustPackage {
@@ -69,48 +69,40 @@
           };
           LD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;
         };
-        # packages.web = rustPlatform.buildRustPackage {
-        #   inherit nativeBuildInputs version;
-        #   buildInputs = webBuildInputs;
-        #   pname = pname + "-web";
-        #   src = ./.;
-        #   cargoLock = {
-        #     lockFile = ./Cargo.lock;
-        #   };
-        #   buildPhase = ''
-        #     cargo build --release --target=wasm32-unknown-unknown
-
-        #     echo 'Creating out dir...'
-        #     mkdir -p $out/src;
-
-        #     echo 'Generating node module...'
-        #     wasm-bindgen \
-        #       --out-name wasm \
-        #       --target web \
-        #       --out-dir $out/src \
-        #       target/wasm32-unknown-unknown/release/bevy-flake.wasm;
-        #   '';
-        #   installPhase = "echo 'Skipping installPhase'";
-        # };
-        # packages.site =
-        #   let
-        #     web = self.packages.${system}.web;
-        #   in
-        #   pkgs.stdenv.mkDerivation {
-        #     inherit version;
-        #     buildInputs = [
-        #       web
-        #       pkgs.zip
-        #     ];
-        #     pname = pname + "-site";
-        #     src = ./web;
-        #     installPhase = ''
-        #       cp -r . $out
-        #       cp ${web}/src/* $out
-        #       cd $out
-        #       zip site *
-        #     '';
-        #   };
+        packages.web = rustPlatform.buildRustPackage {
+          inherit nativeBuildInputs version;
+          buildInputs = webBuildInputs;
+          pname = pname + "-web";
+          src = ./.;
+          cargoLock = {
+            lockFile = ./Cargo.lock;
+          };
+          buildPhase = ''
+            cargo build --release --target=wasm32-unknown-unknown
+            mkdir -p $out
+            cp target/wasm32-unknown-unknown/release/${pname}.wasm $out/release.wasm
+          '';
+          installPhase = "echo 'Skipping installPhase'";
+        };
+        packages.site =
+          let
+            web = self.packages.${system}.web;
+          in
+          pkgs.stdenv.mkDerivation {
+            inherit version;
+            buildInputs = [
+              web
+              pkgs.zip
+            ];
+            pname = pname + "-site";
+            src = ./web;
+            installPhase = ''
+              cp -r . $out
+              cp ${web}/* $out
+              cd $out
+              zip site *
+            '';
+          };
         devShells.default = pkgs.mkShell rec {
           inherit nativeBuildInputs;
           buildInputs = webBuildInputs;
