@@ -4,6 +4,8 @@ cross-platform (native + web) projects with the ~macroquad~ game engine.
 ** Develop
 #+begin_src sh
   nix develop
+
+  cargo run # build and run project
 #+end_src
 ** Build
 #+begin_src sh
@@ -16,7 +18,7 @@ cross-platform (native + web) projects with the ~macroquad~ game engine.
 #+end_src
 ** Publish (web)
 #+begin_src sh
-  nix build .#site # this takes a while...
+  nix build .#site
 #+end_src
 Upload the generated ~result/site.zip~ to ~itch.io~ (untested)
 * References
