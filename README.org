@@ -1,5 +1,7 @@
 A proof of concept reproducible build and development environment for
 cross-platform (native + web) projects with the ~macroquad~ game engine.
+* Roadmap
+- [ ] support multiple build targets (single site + multi-view page)
 * Usage
 ** Develop
 #+begin_src sh
