@@ -17,6 +17,10 @@ cross-platform (native + web) projects with the ~macroquad~ game engine.
 ** Run
 #+begin_src sh
   nix run
+
+  # for web
+  cp result/release.wasm web/
+  nix run nixpkgs#simple-http-server web/ # open index.html
 #+end_src
 ** Publish (web)
 #+begin_src sh
